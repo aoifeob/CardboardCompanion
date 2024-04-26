@@ -2,6 +2,7 @@ package com.example.cardboardcompanion.ui.navigation
 
 import androidx.compose.runtime.Composable
 import com.example.cardboardcompanion.R
+import com.example.cardboardcompanion.ui.screen.ScannerScreen
 import com.example.cardboardcompanion.ui.screen.TutorialScreen
 
 interface Destination {
@@ -11,6 +12,13 @@ interface Destination {
     val screen: @Composable () -> Unit
 }
 
+object Scanner : Destination {
+    override val icon = R.drawable.baseline_photo_camera_24
+    override val title = "Scan New Card"
+    override val route = "scanner"
+    override val screen: @Composable () -> Unit = { ScannerScreen() }
+}
+
 object Tutorial : Destination {
     override val icon = R.drawable.baseline_question_mark_24
     override val title = "How To Use"
@@ -18,5 +26,5 @@ object Tutorial : Destination {
     override val screen: @Composable () -> Unit = { TutorialScreen() }
 }
 
-val topBarNavScreens = listOf(Tutorial)
+val topBarNavScreens = listOf(Scanner, Tutorial)
 
