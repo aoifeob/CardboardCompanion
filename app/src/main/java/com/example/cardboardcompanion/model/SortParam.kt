@@ -1,13 +1,10 @@
 package com.example.cardboardcompanion.model
 
-enum class SortParam(display: String) {
-    NAME_ASC("Name (Ascending)"),
-    NAME_DESC("Name (Descending)"),
-    PRICE_ASC ("Price (Ascending)"),
-    PRICE_DESC ("Price (Descending)"),
-    SET_ASC ("Set (Ascending)"),
-    SET_DESC ("Set (Descending)");
-
-    var displayName = display
-
+enum class SortParam(var display: String) {
+    NAME_ASC("Name (A-Z)"),
+    NAME_DESC("Name (Z-A)"),
+    PRICE_DESC ("Price (High to Low)"),
+    PRICE_ASC ("Price (Low to High)"),
+    SET_ASC ("Set (A-Z)"),
+    SET_DESC ("Set (Z-A)")
 }

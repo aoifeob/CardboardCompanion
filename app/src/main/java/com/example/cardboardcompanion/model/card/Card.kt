@@ -29,16 +29,13 @@ data class CardCollection(var collection: List<Card>){
     }
 }
 
-enum class CardColour(display: String, image: Int) {
+enum class CardColour(var display: String, var image: Int) {
     WHITE("White", R.drawable.mtg_colour_white),
     BLUE("Blue", R.drawable.mtg_colour_blue),
     BLACK("Black", R.drawable.mtg_colour_black),
     RED("Red", R.drawable.mtg_colour_red),
     GREEN("Green", R.drawable.mtg_colour_green),
-    COLOURLESS("Colourless", R.drawable.mtg_colour_colourless);
-
-    var displayName = display
-    var displayImage = image
+    COLOURLESS("Colourless", R.drawable.mtg_colour_colourless)
 }
 
 data class DetectedCard(

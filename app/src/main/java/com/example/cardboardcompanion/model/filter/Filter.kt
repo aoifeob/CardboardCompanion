@@ -22,10 +22,8 @@ data class ColourFilter(
     val colours: List<CardColour>
 ) : Filter
 
-enum class FilterType(display: String) {
+enum class FilterType(var display: String) {
     PRICE ("Price"),
     SET ("Set"),
     COLOUR("Colour");
-
-    var displayName = display
 }

@@ -19,7 +19,7 @@ import com.example.cardboardcompanion.ui.theme.CardboardCompanionTheme
 fun TutorialScreen() {
     CardboardCompanionTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
-            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("Welcome to Cardboard Companion!", style = MaterialTheme.typography.titleLarge)
                 Spacer(modifier = Modifier.padding(15.dp))
 

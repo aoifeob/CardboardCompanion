@@ -2,7 +2,6 @@ package com.example.cardboardcompanion.ui.screen
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,7 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -210,7 +209,7 @@ private fun SortMenu(sortParam: SortParam, onSortParamUpdated: (SortParam) -> Un
             SortParam.entries.forEach {
                 DropdownMenuItem(text = {
                     Text(
-                        it.displayName,
+                        it.display,
                         color = if (sortParam == it) MaterialTheme.colorScheme.primary else Color.Black,
                     )
                 },
@@ -308,6 +307,7 @@ private fun CardDetails(card: Card) {
                 text = card.getDisplayPrice(),
                 modifier = Modifier.padding(all = 4.dp),
                 style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold
             )
         }
     }
