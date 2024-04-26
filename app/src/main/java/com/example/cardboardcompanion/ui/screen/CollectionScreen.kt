@@ -207,23 +207,7 @@ private fun SearchMenu(
         }
     }
 
-    /*TODO: display search menu when expanded:
-        - Search by card name
-        - Search by set name
-     */
 }
-
-//@Composable
-//fun SearchBar() {
-//    var text by remember { mutableStateOf("") }
-//
-//    TextField(
-//        value = text,
-//        onValueChange = { text = it },
-//        label = { Text("Search") },
-//        modifier = Modifier.fillMaxWidth()
-//    )
-//}
 
 @Composable
 private fun FilterMenu(
