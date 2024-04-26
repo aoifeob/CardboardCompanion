@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.cardboardcompanion.ui.component.TopNavBar
+import com.example.cardboardcompanion.ui.navigation.Scanner
 import com.example.cardboardcompanion.ui.navigation.Tutorial
 import com.example.cardboardcompanion.ui.navigation.topBarNavScreens
 import com.example.cardboardcompanion.ui.theme.CardboardCompanionTheme
@@ -55,8 +56,12 @@ class MainActivity : ComponentActivity() {
                     startDestination = Tutorial.route,
                     modifier = Modifier.padding(innerPadding)
                 ) {
+                    composable(route = Scanner.route) {
+                        Text(Scanner.title)
+                        Tutorial.screen()
+                    }
                     composable(route = Tutorial.route) {
-                        Text("Tutorial")
+                        Text(Tutorial.title)
                         Tutorial.screen()
                     }
                 }

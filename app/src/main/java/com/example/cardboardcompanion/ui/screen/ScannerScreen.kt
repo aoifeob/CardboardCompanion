@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.cardboardcompanion.model.card.DetectedCard
-import com.example.cardboardcompanion.ui.components.CameraContent
+import com.example.cardboardcompanion.ui.component.CameraContent
 import com.example.cardboardcompanion.ui.theme.CardboardCompanionTheme
 
 @Composable
@@ -119,7 +119,7 @@ fun ConfirmCard(card: DetectedCard) {
 )
 @Composable
 fun ConfirmPreview() {
-    ConfirmCard(DetectedCard("Argivian Phalanx", "DMU", 5, 0.05))
+    ConfirmCard(DetectedCard("Argivian Phalanx", "DMU", "5", 0.05))
 }
 
 @Preview(name = "Light Mode")
