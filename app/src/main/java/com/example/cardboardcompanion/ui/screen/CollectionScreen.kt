@@ -22,11 +22,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -39,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -66,9 +68,12 @@ fun CollectionLayout(
                 OnboardingScreen()
             } else {
                 CollectionScreen(
-                    cards,
+                    cards, collectionViewModel.searchParam,
+                    collectionViewModel.isActiveSearch,
+                    { collectionViewModel.onSearchParamUpdated(it) },
+                    { collectionViewModel.onSearchExecuted(it) },
                     collectionViewModel.sortParam,
-                    { collectionViewModel.updateCollection(it) }
+                    { collectionViewModel.onSortExecuted(it) }
                 )
             }
         }
@@ -77,7 +82,11 @@ fun CollectionLayout(
 
 @Composable
 fun CollectionScreen(
-    cards: List<Card>,
+    cards: List<Card> = listOf(),
+    searchParam: String,
+    isActiveSearch: Boolean,
+    onSearchParamUpdated: (String) -> Unit,
+    onSearchExecuted: (String) -> Unit,
     sortParam: SortParam,
     onSortParamUpdated: (SortParam) -> Unit
 ) {
@@ -85,9 +94,36 @@ fun CollectionScreen(
     Column {
 
         CustomiseResultsMenu(
+            searchParam,
+            onSearchParamUpdated,
+            onSearchExecuted,
             sortParam,
             onSortParamUpdated
         )
+
+        if (isActiveSearch && searchParam.isNotBlank()) {
+            if (cards.isEmpty()) {
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    "No results found for: $searchParam",
+                    fontStyle = FontStyle.Italic,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .padding(15.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+            } else {
+                Text(
+                    "Displaying results for: $searchParam",
+                    fontStyle = FontStyle.Italic,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .padding(top = 25.dp, bottom = 5.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+            }
+        }
 
         CardCollection(cards)
 
@@ -104,6 +140,9 @@ fun CollectionLayout() {
 
 @Composable
 private fun CustomiseResultsMenu(
+    searchParam: String,
+    onSearchParamUpdated: (String) -> Unit,
+    onSearchExecuted: (String) -> Unit,
     sortParam: SortParam,
     onSortParamUpdated: (SortParam) -> Unit
 ) {
@@ -112,7 +151,7 @@ private fun CustomiseResultsMenu(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SearchMenu()
+            SearchMenu(searchParam, onSearchParamUpdated, onSearchExecuted)
             Spacer(modifier = Modifier.weight(1f))
             FilterMenu()
             Spacer(modifier = Modifier.weight(1f))
@@ -121,8 +160,12 @@ private fun CustomiseResultsMenu(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchMenu(
+    searchParam: String,
+    onSearchParamUpdated: (String) -> Unit,
+    onSearchExecuted: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     Button(
@@ -132,22 +175,33 @@ private fun SearchMenu(
         Icon(imageVector = Icons.Default.Search, contentDescription = null)
     }
 
+    if (expanded) {
+        Box () {
+            SearchBar(
+                query = searchParam,
+                onQueryChange = onSearchParamUpdated,
+                onSearch = onSearchExecuted,
+                placeholder = {
+                    Text(text = "e.g. Bolt", fontStyle = FontStyle.Italic)
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        tint = MaterialTheme.colorScheme.onSurface,
+                        contentDescription = null
+                    )
+                },
+                content = {},
+                active = true,
+                onActiveChange = {  },
+            )
+        }
+    }
+
     /*TODO: display search menu when expanded:
         - Search by card name
         - Search by set name
      */
-}
-
-@Composable
-fun SearchBar() {
-    var text by remember { mutableStateOf("") }
-
-    TextField(
-        value = text,
-        onValueChange = { text = it },
-        label = { Text("Search") },
-        modifier = Modifier.fillMaxWidth()
-    )
 }
 
 @Composable
