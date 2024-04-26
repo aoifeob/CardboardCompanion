@@ -21,7 +21,7 @@ class CollectionViewModel : ViewModel() {
     var visibleCards by mutableStateOf(_uiState.value.cardCollection.collection.sortedBy { it.name })
     val uiState: StateFlow<CollectionUiState> = _uiState.asStateFlow()
     internal var isActiveSearch by mutableStateOf(false)
-    internal var currentSearchString by mutableStateOf("")
+    private var currentSearchString by mutableStateOf("")
     internal var searchParam by mutableStateOf("")
     internal var sortParam by mutableStateOf(SortParam.NAME_ASC)
 
