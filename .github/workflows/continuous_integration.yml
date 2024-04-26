@@ -16,7 +16,19 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v3
+        
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
+        
       - name: Build with Gradle
         run: ./gradlew build
