@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     composable(route = Scanner.route) {
                         Text(Scanner.title)
-                        Tutorial.screen()
+                        Scanner.screen()
                     }
                     composable(route = Tutorial.route) {
                         Text(Tutorial.title)
