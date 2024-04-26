@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.cardboardcompanion.R
+import com.example.cardboardcompanion.model.SortParam
 import com.example.cardboardcompanion.model.card.Card
 import com.example.cardboardcompanion.model.card.CardCollection
 import com.example.cardboardcompanion.model.card.CardColour
@@ -19,6 +20,25 @@ class CollectionViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(CollectionUiState(cardCollection))
     var visibleCards by mutableStateOf(_uiState.value.cardCollection.collection.sortedBy { it.name })
     val uiState: StateFlow<CollectionUiState> = _uiState.asStateFlow()
+    internal var sortParam by mutableStateOf(SortParam.NAME_ASC)
+
+    fun updateCollection(
+        updatedSortParam: SortParam
+    ) {
+        sortParam = updatedSortParam
+        visibleCards = sortCollection(sortParam)
+    }
+
+    private fun sortCollection(sortParam: SortParam) : List<Card> {
+        return when (sortParam){
+            SortParam.NAME_DESC -> visibleCards.sortedByDescending { it.name }
+            SortParam.SET_ASC -> visibleCards.sortedBy { it.set }
+            SortParam.SET_DESC -> visibleCards.sortedByDescending { it.set }
+            SortParam.PRICE_ASC -> visibleCards.sortedBy { it.price }
+            SortParam.PRICE_DESC -> visibleCards.sortedByDescending { it.price }
+            else -> visibleCards.sortedBy { it.name }
+        }
+    }
 
     //TODO: remove test data
     private fun getTestCardCollection(): CardCollection {
