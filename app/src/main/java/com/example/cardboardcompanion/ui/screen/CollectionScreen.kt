@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -24,10 +26,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -64,7 +68,7 @@ fun CollectionLayout(
                 CollectionScreen(
                     cards,
                     collectionViewModel.sortParam,
-                    onSortParamUpdated = { collectionViewModel.updateCollection(it) }
+                    { collectionViewModel.updateCollection(it) }
                 )
             }
         }
@@ -108,10 +112,62 @@ private fun CustomiseResultsMenu(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            SearchMenu()
+            Spacer(modifier = Modifier.weight(1f))
+            FilterMenu()
             Spacer(modifier = Modifier.weight(1f))
             SortMenu(sortParam, onSortParamUpdated)
         }
     }
+}
+
+@Composable
+private fun SearchMenu(
+) {
+    var expanded by remember { mutableStateOf(false) }
+    Button(
+        onClick = { expanded = !expanded },
+        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
+    ) {
+        Icon(imageVector = Icons.Default.Search, contentDescription = null)
+    }
+
+    /*TODO: display search menu when expanded:
+        - Search by card name
+        - Search by set name
+     */
+}
+
+@Composable
+fun SearchBar() {
+    var text by remember { mutableStateOf("") }
+
+    TextField(
+        value = text,
+        onValueChange = { text = it },
+        label = { Text("Search") },
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+private fun FilterMenu(
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    Button(
+        onClick = { expanded = !expanded },
+        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.baseline_filter_alt_24),
+            contentDescription = null
+        )
+    }
+    /*TODO: display filter menu when expanded:
+        - Price
+        - Set
+        - Colour(s)
+    */
 }
 
 @Composable
