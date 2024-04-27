@@ -55,7 +55,7 @@ class CollectionViewModel : ViewModel() {
     }
 
     private fun searchCollection(searchString: String) {
-        visibleCards = if (searchString.isNotEmpty()) {
+        visibleCards = if (searchString.isNotBlank()) {
             isActiveSearch = true
             cardCollection.collection.filter {
                 it.name.contains(searchString, ignoreCase = true)
