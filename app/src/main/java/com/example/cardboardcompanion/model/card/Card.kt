@@ -14,7 +14,7 @@ data class Card(
 ) {
 
     fun getDisplayPrice(): String {
-        return "€%.${2}f".format(price)
+        return "€%.${2}f each".format(price)
     }
 
     fun getDisplayName(): String {
@@ -41,7 +41,7 @@ enum class CardColour(var display: String, var image: Int) {
 data class DetectedCard(
     var name: String,
     var set: String,
-    var collectorNo: Int,
+    var collectorNo: String,
     var price: Double
 ) {
 

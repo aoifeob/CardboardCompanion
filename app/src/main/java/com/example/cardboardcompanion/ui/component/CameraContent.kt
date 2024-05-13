@@ -1,4 +1,4 @@
-package com.example.cardboardcompanion.ui.components
+package com.example.cardboardcompanion.ui.component
 
 import android.content.Context
 import android.view.ViewGroup

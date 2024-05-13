@@ -9,10 +9,7 @@ import com.example.cardboardcompanion.model.SortParam
 import com.example.cardboardcompanion.model.card.Card
 import com.example.cardboardcompanion.model.card.CardCollection
 import com.example.cardboardcompanion.model.card.CardColour
-import com.example.cardboardcompanion.model.filter.ColourFilter
 import com.example.cardboardcompanion.model.filter.Filter
-import com.example.cardboardcompanion.model.filter.PriceFilter
-import com.example.cardboardcompanion.model.filter.SetFilter
 import com.example.cardboardcompanion.ui.state.CollectionUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,31 +22,39 @@ class CollectionViewModel : ViewModel() {
     var visibleCards by mutableStateOf(_uiState.value.cardCollection.collection.sortedBy { it.name })
     val uiState: StateFlow<CollectionUiState> = _uiState.asStateFlow()
     internal var isActiveSearch by mutableStateOf(false)
-    internal var searchParam by mutableStateOf("")
+    private var currentSearchString by mutableStateOf("")
+    internal var searchText by mutableStateOf("")
     internal var sortParam by mutableStateOf(SortParam.NAME_ASC)
     internal var filter: Filter? by mutableStateOf(null)
 
     fun onSearchParamUpdated(updatedSearchString: String)
     {
-        searchParam = updatedSearchString
+        searchText = updatedSearchString
     }
 
-    fun onSearchExecuted() {
-        updateCollection(searchParam, sortParam, filter)
+    fun onSearchExecuted(searchString: String) {
+        if (currentSearchString != searchString) {
+            currentSearchString = searchString
+            updateCollection(currentSearchString, sortParam, filter)
+        }
     }
 
-    fun updateCollection(
+    fun onSortExecuted(
         updatedSortParam: SortParam
     ) {
-        sortParam = updatedSortParam
-        updateCollection(searchParam, updatedSortParam, filter)
+        if (sortParam != updatedSortParam) {
+            sortParam = updatedSortParam
+            updateCollection(currentSearchString, sortParam, filter)
+        }
     }
 
-    fun updateCollection(
+    fun onFilterExecuted(
         updatedFilter: Filter?
     ) {
-        filter = updatedFilter
-        updateCollection(searchParam, sortParam, updatedFilter)
+        if (filter != updatedFilter) {
+            filter = updatedFilter
+            updateCollection(currentSearchString, sortParam, filter)
+        }
     }
 
     private fun updateCollection(
@@ -57,6 +62,12 @@ class CollectionViewModel : ViewModel() {
         sortParam: SortParam,
         filter: Filter?
     ) {
+        searchCollection(searchString)
+        filter?.let { filterCollection(it) }
+        sortCollection(sortParam)
+    }
+
+    private fun searchCollection(searchString: String) {
         visibleCards = if (searchString.isNotEmpty()) {
             isActiveSearch = true
             cardCollection.collection.filter {
@@ -66,32 +77,29 @@ class CollectionViewModel : ViewModel() {
             isActiveSearch = false
             cardCollection.collection
         }
-
-        filter?.let { visibleCards = filterCollection(it) }
-
-        visibleCards = sortCollection(sortParam)
     }
 
-    private fun filterCollection(filter: Filter): List<Card> {
-        return when (filter) {
-            is PriceFilter -> visibleCards.filter {
-                filter.minPrice >= it.price && filter.maxPrice <= it.price
-            }
+    private fun filterCollection(filter: Filter) {
 
-            is SetFilter -> visibleCards.filter {
-                filter.set == it.set
-            }
-
-            is ColourFilter -> visibleCards.filter {
-                filter.colours.size == it.colours.size && filter.colours.containsAll(it.colours)
-            }
-
-            else -> cardCollection.collection
-        }
+//        visibleCards = when (filter) {
+//            is PriceFilter -> visibleCards.filter {
+//                filter.minPrice >= it.price && filter.maxPrice <= it.price
+//            }
+//
+//            is SetFilter -> visibleCards.filter {
+//                filter.set == it.set
+//            }
+//
+//            is ColourFilter -> visibleCards.filter {
+//                filter.colours.size == it.colours.size && filter.colours.containsAll(it.colours)
+//            }
+//
+//            else -> cardCollection.collection
+//        }
     }
 
-    private fun sortCollection(sortParam: SortParam): List<Card> {
-        return when (sortParam) {
+    private fun sortCollection(sortParam: SortParam) {
+        visibleCards =  when (sortParam) {
             SortParam.NAME_DESC -> visibleCards.sortedByDescending { it.name }
             SortParam.SET_ASC -> visibleCards.sortedBy { it.set }
             SortParam.SET_DESC -> visibleCards.sortedByDescending { it.set }

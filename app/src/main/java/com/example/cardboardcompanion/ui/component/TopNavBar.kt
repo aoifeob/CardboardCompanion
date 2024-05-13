@@ -1,4 +1,4 @@
-package com.example.cardboardcompanion.ui.components
+package com.example.cardboardcompanion.ui.component
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box

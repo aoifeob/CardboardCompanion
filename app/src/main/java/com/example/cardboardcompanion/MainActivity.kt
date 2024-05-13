@@ -17,10 +17,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.cardboardcompanion.ui.components.TopNavBar
+import com.example.cardboardcompanion.ui.component.TopNavBar
 import com.example.cardboardcompanion.ui.navigation.Collection
-import com.example.cardboardcompanion.ui.navigation.Scanner
-import com.example.cardboardcompanion.ui.navigation.Tutorial
 import com.example.cardboardcompanion.ui.navigation.topBarNavScreens
 import com.example.cardboardcompanion.ui.theme.CardboardCompanionTheme
 
@@ -57,17 +55,13 @@ class MainActivity : ComponentActivity() {
                     startDestination = Collection.route,
                     modifier = Modifier.padding(innerPadding)
                 ) {
-                    composable(route = Collection.route) {
-                        Text("Collection")
-                        Collection.screen()
-                    }
-                    composable(route = Scanner.route) {
-                        Text("Scanner")
-                        Scanner.screen()
-                    }
-                    composable(route = Tutorial.route) {
-                        Text("Tutorial")
-                        Tutorial.screen()
+                    topBarNavScreens.forEach {
+                        val title = it.title
+                        val screen = it.screen
+                        composable(route = it.route) {
+                            Text(title)
+                            screen()
+                        }
                     }
                 }
             }
@@ -75,7 +69,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun NavHostController.navigateSingleTopTo(route: String) = this.navigate(route) {
+    private fun NavHostController.navigateSingleTopTo(route: String) = this.navigate(route) {
         popUpTo(
             this@navigateSingleTopTo.graph.findStartDestination().id
         ){

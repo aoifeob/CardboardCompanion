@@ -16,6 +16,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -26,11 +30,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.cardboardcompanion.model.card.DetectedCard
-import com.example.cardboardcompanion.ui.components.CameraContent
+import com.example.cardboardcompanion.ui.component.CameraContent
 import com.example.cardboardcompanion.ui.theme.CardboardCompanionTheme
 
 @Composable
 fun ScannerScreen() {
+    var isConfirmDialogVisible by remember { mutableStateOf(false) }
+
     CardboardCompanionTheme {
         IdentifyScreen()
     }
@@ -57,8 +63,8 @@ fun IdentifyScreen() {
 }
 
 @Composable
-fun ConfirmCard(card: DetectedCard) {
-    Dialog(onDismissRequest = { /*TODO*/ }) {
+fun ConfirmCard(card: DetectedCard, onDismiss: () -> Unit, onConfirm: () -> Unit) {
+    Dialog(onDismissRequest = { onDismiss() }) {
         Card(
             modifier = Modifier
                 .height(200.dp)
@@ -89,7 +95,7 @@ fun ConfirmCard(card: DetectedCard) {
                     horizontalArrangement = Arrangement.Center,
                 ) {
                     TextButton(
-                        onClick = { /*TODO*/ },
+                        onClick = { onDismiss() },
                         modifier = Modifier.padding(8.dp),
 
                         ) {
@@ -98,7 +104,9 @@ fun ConfirmCard(card: DetectedCard) {
                         )
                     }
                     TextButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            onConfirm()
+                        },
                         modifier = Modifier.padding(8.dp),
                     ) {
                         Text(
@@ -119,7 +127,15 @@ fun ConfirmCard(card: DetectedCard) {
 )
 @Composable
 fun ConfirmPreview() {
-    ConfirmCard(DetectedCard("Argivian Phalanx", "DMU", 5, 0.05))
+    var isConfirmDialogVisible by remember { mutableStateOf(true) }
+
+    ConfirmCard(
+        DetectedCard("Argivian Phalanx", "DMU", "5", 0.05),
+        { isConfirmDialogVisible = false },
+        {
+            isConfirmDialogVisible =
+                false /*TODO: add card to library and indicate if failure occurs with toast*/
+        })
 }
 
 @Preview(name = "Light Mode")

@@ -1,4 +1,4 @@
-package com.example.cardboardcompanion.ui.components
+package com.example.cardboardcompanion.ui.component
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings

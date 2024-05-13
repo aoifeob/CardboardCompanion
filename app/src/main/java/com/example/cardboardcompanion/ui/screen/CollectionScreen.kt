@@ -55,6 +55,14 @@ import com.example.cardboardcompanion.ui.theme.CardboardCompanionTheme
 import com.example.cardboardcompanion.viewmodel.CollectionViewModel
 
 @Composable
+fun CollectionLayout() {
+    CollectionLayout(
+        modifier = Modifier,
+        collectionViewModel = viewModel()
+    )
+}
+
+@Composable
 fun CollectionLayout(
     collectionViewModel: CollectionViewModel = viewModel(),
     modifier: Modifier
@@ -69,14 +77,14 @@ fun CollectionLayout(
                 OnboardingScreen()
             } else {
                 CollectionScreen(
-                    cards, collectionViewModel.searchParam,
+                    cards, collectionViewModel.searchText,
                     collectionViewModel.isActiveSearch,
                     { collectionViewModel.onSearchParamUpdated(it) },
-                    { collectionViewModel.onSearchExecuted() },
+                    { collectionViewModel.onSearchExecuted(it) },
                     collectionViewModel.sortParam,
-                    { collectionViewModel.updateCollection(it) },
+                    { collectionViewModel.onSortExecuted(it) },
                     collectionViewModel.filter,
-                    { collectionViewModel.updateCollection(it) }
+                    { collectionViewModel.onFilterExecuted(it) }
                 )
             }
         }
@@ -112,9 +120,8 @@ fun CollectionScreen(
             if (cards.isEmpty()) {
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    "No results found for: $searchParam",
-                    fontStyle = FontStyle.Italic,
-                    color = MaterialTheme.colorScheme.primary,
+                    "No results found for:\n $searchParam",
+                    color = MaterialTheme.colorScheme.error,
                     modifier = Modifier
                         .padding(15.dp)
                         .align(Alignment.CenterHorizontally)
@@ -135,14 +142,6 @@ fun CollectionScreen(
         CardCollection(cards)
 
     }
-}
-
-@Composable
-fun CollectionLayout() {
-    CollectionLayout(
-        modifier = Modifier,
-        collectionViewModel = viewModel()
-    )
 }
 
 @Composable
@@ -381,7 +380,7 @@ private fun OnboardingScreen(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(name = "Light Mode")
+@Preview(name = "...")
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     showBackground = true,
