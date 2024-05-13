@@ -3,6 +3,7 @@ package com.example.cardboardcompanion.ui.navigation
 import androidx.compose.runtime.Composable
 import com.example.cardboardcompanion.R
 import com.example.cardboardcompanion.ui.screen.CollectionLayout
+import com.example.cardboardcompanion.ui.screen.InsightsLayout
 import com.example.cardboardcompanion.ui.screen.ScannerScreen
 import com.example.cardboardcompanion.ui.screen.TutorialScreen
 
@@ -27,6 +28,13 @@ object Collection : Destination {
     override val screen: @Composable () -> Unit = { CollectionLayout() }
 }
 
+object Insights : Destination {
+    override val icon = R.drawable.baseline_insights_24
+    override val title = "Price Insights"
+    override val route = "insights"
+    override val screen: @Composable () -> Unit = { InsightsLayout() }
+}
+
 object Tutorial : Destination {
     override val icon = R.drawable.baseline_question_mark_24
     override val title = "How To Use"
@@ -34,5 +42,5 @@ object Tutorial : Destination {
     override val screen: @Composable () -> Unit = { TutorialScreen() }
 }
 
-val topBarNavScreens = listOf(Scanner, Collection, Tutorial)
+val topBarNavScreens = listOf(Scanner, Collection, Insights, Tutorial)
 

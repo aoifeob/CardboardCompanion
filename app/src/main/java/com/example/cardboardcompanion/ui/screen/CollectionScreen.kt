@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -50,11 +49,20 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cardboardcompanion.R
 import com.example.cardboardcompanion.model.SortParam
 import com.example.cardboardcompanion.model.card.Card
+import com.example.cardboardcompanion.ui.component.OnboardingScreen
 import com.example.cardboardcompanion.ui.theme.CardboardCompanionTheme
 import com.example.cardboardcompanion.viewmodel.CollectionViewModel
 
 @Composable
-fun CollectionLayout(
+fun CollectionLayout() {
+    CollectionLayout(
+        modifier = Modifier,
+        collectionViewModel = viewModel()
+    )
+}
+
+@Composable
+private fun CollectionLayout(
     collectionViewModel: CollectionViewModel = viewModel(),
     modifier: Modifier
 ) {
@@ -81,8 +89,8 @@ fun CollectionLayout(
 }
 
 @Composable
-fun CollectionScreen(
-    cards: List<Card> = listOf(),
+private fun CollectionScreen(
+    cards: List<Card>,
     searchParam: String,
     isActiveSearch: Boolean,
     onSearchParamUpdated: (String) -> Unit,
@@ -128,14 +136,6 @@ fun CollectionScreen(
         CardCollection(cards)
 
     }
-}
-
-@Composable
-fun CollectionLayout() {
-    CollectionLayout(
-        modifier = Modifier,
-        collectionViewModel = viewModel()
-    )
 }
 
 @Composable
@@ -343,32 +343,6 @@ private fun CardDetails(card: Card) {
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )
-        }
-    }
-}
-
-@Composable
-private fun OnboardingScreen(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            "Welcome to Cardboard Companion!",
-            style = MaterialTheme.typography.titleMedium,
-        )
-        Spacer(modifier = Modifier.padding(15.dp))
-        Text(
-            "Add some cards to your collection to get started",
-            style = MaterialTheme.typography.bodyMedium,
-        )
-        Spacer(modifier = Modifier.padding(2.dp))
-        Button(
-            modifier = Modifier.padding(vertical = 24.dp),
-            onClick = { /* TODO: redirect to scanner */ }
-        ) {
-            Text("Scan a Card")
         }
     }
 }
