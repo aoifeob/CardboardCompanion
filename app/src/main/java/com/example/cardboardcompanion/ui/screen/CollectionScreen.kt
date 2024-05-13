@@ -123,7 +123,7 @@ private fun CollectionScreen(
                 Spacer(modifier = Modifier.weight(1f))
             } else {
                 Text(
-                    "Displaying results for: $searchParam",
+                    "Found ${cards.size} results for: $searchParam",
                     fontStyle = FontStyle.Italic,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
