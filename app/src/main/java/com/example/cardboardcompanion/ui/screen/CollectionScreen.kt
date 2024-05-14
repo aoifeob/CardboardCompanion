@@ -264,8 +264,8 @@ private fun FilterMenu(
                     )
                     RangeSlider(
                         value = sliderPosition,
-                        steps = 10,
-                        onValueChange = { range -> sliderPosition = range },
+                        steps = 15,
+                        onValueChange = { range -> sliderPosition = range.start.toInt().toFloat()..range.endInclusive.toInt().toFloat() },
                         valueRange = sliderRange,
                         onValueChangeFinished = {
                             minPrice =
