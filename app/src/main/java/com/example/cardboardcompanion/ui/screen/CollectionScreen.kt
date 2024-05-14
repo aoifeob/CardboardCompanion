@@ -57,6 +57,7 @@ import com.example.cardboardcompanion.model.filter.Filter
 import com.example.cardboardcompanion.ui.component.OnboardingScreen
 import com.example.cardboardcompanion.ui.theme.CardboardCompanionTheme
 import com.example.cardboardcompanion.viewmodel.CollectionViewModel
+import kotlin.math.roundToInt
 
 @Composable
 fun CollectionLayout() {
@@ -265,7 +266,7 @@ private fun FilterMenu(
                     RangeSlider(
                         value = sliderPosition,
                         steps = 15,
-                        onValueChange = { range -> sliderPosition = range.start.toInt().toFloat()..range.endInclusive.toInt().toFloat() },
+                        onValueChange = { range -> sliderPosition = range.start.roundToInt().toFloat()..range.endInclusive.roundToInt().toFloat() },
                         valueRange = sliderRange,
                         onValueChangeFinished = {
                             minPrice =
