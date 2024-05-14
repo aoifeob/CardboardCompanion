@@ -9,10 +9,12 @@ import com.example.cardboardcompanion.model.SortParam
 import com.example.cardboardcompanion.model.card.Card
 import com.example.cardboardcompanion.model.card.CardCollection
 import com.example.cardboardcompanion.model.card.CardColour
+import com.example.cardboardcompanion.model.filter.Filter
 import com.example.cardboardcompanion.ui.state.CollectionUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlin.math.roundToInt
 
 class CollectionViewModel : ViewModel() {
 
@@ -24,16 +26,18 @@ class CollectionViewModel : ViewModel() {
     private var currentSearchString by mutableStateOf("")
     internal var searchParam by mutableStateOf("")
     internal var sortParam by mutableStateOf(SortParam.NAME_ASC)
+    internal var filter: Filter? by mutableStateOf(null)
+    internal var minPriceRestriction = 0f
+    internal var maxPriceRestriction = cardCollection.collection.maxBy { it.price }.price.roundToInt().toFloat()
 
-    fun onSearchParamUpdated(updatedSearchString: String)
-    {
+    fun onSearchParamUpdated(updatedSearchString: String) {
         searchParam = updatedSearchString
     }
 
     fun onSearchExecuted(searchString: String) {
         if (currentSearchString != searchString) {
             currentSearchString = searchString
-            updateCollection(searchParam, sortParam)
+            updateCollection(searchParam, sortParam, filter)
         }
     }
 
@@ -42,15 +46,26 @@ class CollectionViewModel : ViewModel() {
     ) {
         if (sortParam != updatedSortParam) {
             sortParam = updatedSortParam
-            updateCollection(searchParam, updatedSortParam)
+            updateCollection(searchParam, updatedSortParam, filter)
+        }
+    }
+
+    fun onFilterExecuted(
+        updatedFilter: Filter?
+    ) {
+        if (filter != updatedFilter) {
+            filter = updatedFilter
+            updateCollection(currentSearchString, sortParam, filter)
         }
     }
 
     private fun updateCollection(
         searchString: String,
-        sortParam: SortParam
+        sortParam: SortParam,
+        filter: Filter?
     ) {
         searchCollection(searchString)
+        filterCollection(filter)
         sortCollection(sortParam)
     }
 
@@ -66,8 +81,19 @@ class CollectionViewModel : ViewModel() {
         }
     }
 
+    private fun filterCollection(filter: Filter?) {
+        if (filter != null) {
+            filter.minPrice?.let { minPrice ->
+                visibleCards = visibleCards.filter { minPrice <= it.price }
+            }
+            filter.maxPrice?.let { maxPrice ->
+                visibleCards = visibleCards.filter { maxPrice >= it.price }
+            }
+        }
+    }
+
     private fun sortCollection(sortParam: SortParam) {
-        visibleCards =  when (sortParam) {
+        visibleCards = when (sortParam) {
             SortParam.NAME_DESC -> visibleCards.sortedByDescending { it.name }
             SortParam.SET_ASC -> visibleCards.sortedBy { it.set }
             SortParam.SET_DESC -> visibleCards.sortedByDescending { it.set }

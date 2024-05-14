@@ -15,15 +15,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -45,10 +48,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cardboardcompanion.R
 import com.example.cardboardcompanion.model.SortParam
 import com.example.cardboardcompanion.model.card.Card
+import com.example.cardboardcompanion.model.filter.Filter
 import com.example.cardboardcompanion.ui.component.OnboardingScreen
 import com.example.cardboardcompanion.ui.theme.CardboardCompanionTheme
 import com.example.cardboardcompanion.viewmodel.CollectionViewModel
@@ -69,6 +74,7 @@ private fun CollectionLayout(
     val collectionUiState by collectionViewModel.uiState.collectAsState()
     val cards = collectionViewModel.visibleCards
     val isLibraryEmpty by rememberSaveable { mutableStateOf(collectionUiState.cardCollection.isEmpty()) }
+    val priceFilterSliderRange by remember { mutableStateOf(collectionViewModel.minPriceRestriction..collectionViewModel.maxPriceRestriction) }
 
     Column {
         Surface(modifier = modifier.weight(1f), color = MaterialTheme.colorScheme.background) {
@@ -81,7 +87,10 @@ private fun CollectionLayout(
                     { collectionViewModel.onSearchParamUpdated(it) },
                     { collectionViewModel.onSearchExecuted(it) },
                     collectionViewModel.sortParam,
-                    { collectionViewModel.onSortExecuted(it) }
+                    { collectionViewModel.onSortExecuted(it) },
+                    collectionViewModel.filter,
+                    { collectionViewModel.onFilterExecuted(it) },
+                    priceFilterSliderRange
                 )
             }
         }
@@ -96,7 +105,10 @@ private fun CollectionScreen(
     onSearchParamUpdated: (String) -> Unit,
     onSearchExecuted: (String) -> Unit,
     sortParam: SortParam,
-    onSortParamUpdated: (SortParam) -> Unit
+    onSortParamUpdated: (SortParam) -> Unit,
+    filter: Filter?,
+    onFilterExecuted: (Filter?) -> Unit,
+    sliderRange: ClosedFloatingPointRange<Float>
 ) {
 
     Column {
@@ -106,7 +118,10 @@ private fun CollectionScreen(
             onSearchParamUpdated,
             onSearchExecuted,
             sortParam,
-            onSortParamUpdated
+            onSortParamUpdated,
+            filter,
+            onFilterExecuted,
+            sliderRange
         )
 
         if (isActiveSearch && searchParam.isNotBlank()) {
@@ -144,7 +159,10 @@ private fun CustomiseResultsMenu(
     onSearchParamUpdated: (String) -> Unit,
     onSearchExecuted: (String) -> Unit,
     sortParam: SortParam,
-    onSortParamUpdated: (SortParam) -> Unit
+    onSortParamUpdated: (SortParam) -> Unit,
+    filter: Filter?,
+    onFilterExecuted: (Filter?) -> Unit,
+    sliderRange: ClosedFloatingPointRange<Float>
 ) {
     Surface(color = MaterialTheme.colorScheme.secondary, modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -153,7 +171,7 @@ private fun CustomiseResultsMenu(
         ) {
             SearchMenu(searchParam, onSearchParamUpdated, onSearchExecuted)
             Spacer(modifier = Modifier.weight(1f))
-            FilterMenu()
+            FilterMenu(filter, onFilterExecuted, sliderRange)
             Spacer(modifier = Modifier.weight(1f))
             SortMenu(sortParam, onSortParamUpdated)
         }
@@ -176,7 +194,7 @@ private fun SearchMenu(
     }
 
     if (expanded) {
-        Box () {
+        Box() {
             SearchBar(
                 query = searchParam,
                 onQueryChange = onSearchParamUpdated,
@@ -193,35 +211,109 @@ private fun SearchMenu(
                 },
                 content = {},
                 active = true,
-                onActiveChange = {  },
+                onActiveChange = { },
             )
         }
     }
-
-    /*TODO: display search menu when expanded:
-        - Search by card name
-        - Search by set name
-     */
 }
 
 @Composable
 private fun FilterMenu(
+    filter: Filter?,
+    onFilterExecuted: (Filter?) -> Unit,
+    sliderRange: ClosedFloatingPointRange<Float>
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
+
+    val currentMinPrice = if (filter?.minPrice == null) 0f else filter.minPrice.toFloat()
+    val currentMaxPrice =
+        if (filter?.maxPrice == null) sliderRange.endInclusive else filter.maxPrice.toFloat()
+    var sliderPosition by remember { mutableStateOf(currentMinPrice..currentMaxPrice) }
+
+    var minPrice: Double? = filter?.minPrice
+    var maxPrice: Double? = filter?.maxPrice
+
     Button(
         onClick = { expanded = !expanded },
         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
     ) {
         Icon(
             painter = painterResource(id = R.drawable.baseline_filter_alt_24),
-            contentDescription = null
+            contentDescription = null,
+            tint = if (filter != null) MaterialTheme.colorScheme.inversePrimary else MaterialTheme.colorScheme.surface
         )
     }
-    /*TODO: display filter menu when expanded:
-        - Price
-        - Set
-        - Colour(s)
-    */
+    if (expanded) {
+        Dialog(onDismissRequest = { expanded = !expanded }) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(375.dp)
+                    .padding(16.dp),
+                shape = RoundedCornerShape(16.dp),
+            ) {
+                Column(
+                    modifier = Modifier.padding(all = 10.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        "Price Filter",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    RangeSlider(
+                        value = sliderPosition,
+                        steps = 10,
+                        onValueChange = { range -> sliderPosition = range },
+                        valueRange = sliderRange,
+                        onValueChangeFinished = {
+                            minPrice =
+                                if (sliderPosition.start.toInt() == (0))
+                                    null
+                                else sliderPosition.start.toDouble()
+                            maxPrice =
+                                if (sliderPosition.endInclusive.toInt() == (sliderRange.endInclusive.toInt()))
+                                    null
+                                else sliderPosition.endInclusive.toDouble()
+                        },
+                    )
+                    Text(text = sliderPosition.toString())
+                    Spacer(modifier = Modifier.weight(1f))
+                    Row(
+                        modifier = Modifier.padding(all = 10.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Spacer(modifier = Modifier.weight(1f))
+                        Button(
+                            onClick = {
+                                onFilterExecuted(null)
+                                expanded = false
+                            },
+                            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
+                        ) {
+                            Text("Clear")
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                        Button(onClick = {
+                            onFilterExecuted(Filter(minPrice, maxPrice, null))
+                            expanded = false
+                        }) {
+                            Text("Apply")
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
+                    Button(
+                        onClick = { expanded = !expanded },
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)
+                    ) {
+                        Text("Cancel")
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable
