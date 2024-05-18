@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    kotlin("plugin.serialization") version "1.4.21"
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -68,7 +71,19 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.text.recognition)
     implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.work)
+    implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.lifecycle.runtime.compose.android)
+
+    kapt(libs.hilt.android.compiler)
+    kapt(libs.androidx.hilt.compiler)
+    kapt(libs.androidx.room.compiler)
+    kapt(libs.lifecycle.compiler)
+    kapt(libs.compiler)
 
     testImplementation(libs.junit)
 

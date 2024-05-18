@@ -8,7 +8,6 @@ import com.example.cardboardcompanion.R
 import com.example.cardboardcompanion.model.SortParam
 import com.example.cardboardcompanion.model.card.Card
 import com.example.cardboardcompanion.model.card.CardCollection
-import com.example.cardboardcompanion.model.card.CardColour
 import com.example.cardboardcompanion.model.filter.Filter
 import com.example.cardboardcompanion.ui.state.CollectionUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -114,9 +113,7 @@ class CollectionViewModel : ViewModel() {
                     117,
                     R.drawable.card_lightning_bolt_2x2_117,
                     2.30,
-                    4,
-                    listOf(CardColour.RED)
-                ),
+                    4),
                 Card(
                     1,
                     "Lightning Bolt",
@@ -124,9 +121,7 @@ class CollectionViewModel : ViewModel() {
                     187,
                     R.drawable.card_lightning_bolt_clb_187,
                     1.18,
-                    2,
-                    listOf(CardColour.RED)
-                ),
+                    2),
                 Card(
                     1,
                     "Humility",
@@ -134,9 +129,7 @@ class CollectionViewModel : ViewModel() {
                     16,
                     R.drawable.card_humility_tpr_16,
                     36.76,
-                    1,
-                    listOf(CardColour.WHITE)
-                ),
+                    1),
                 Card(
                     1,
                     "Horizon Canopy",
@@ -144,9 +137,7 @@ class CollectionViewModel : ViewModel() {
                     240,
                     R.drawable.card_horizon_canopy_ima_240,
                     5.25,
-                    4,
-                    listOf(CardColour.GREEN, CardColour.WHITE)
-                ),
+                    4),
                 Card(
                     1,
                     "Thalia's Lancers",
@@ -154,9 +145,7 @@ class CollectionViewModel : ViewModel() {
                     47,
                     R.drawable.card_thalia_s_lancers_emn_47,
                     0.45,
-                    3,
-                    listOf(CardColour.WHITE)
-                )
+                    3)
             )
         )
     }
