@@ -33,6 +33,10 @@ data class Card(
         return "($set) $name"
     }
 
+    fun getDisplayDetails(): String {
+        return "$name ($set $collectorNo)"
+    }
+
 }
 
 @Dao
@@ -107,26 +111,4 @@ private fun getTestCardCollection(): List<Card> {
             3
         )
     )
-}
-
-data class CardCollection(var collection: List<Card>) {
-    fun isEmpty(): Boolean {
-        return collection.isEmpty()
-    }
-}
-
-data class DetectedCard(
-    var name: String,
-    var set: String,
-    var collectorNo: String,
-    var price: Double
-) {
-
-    fun getDisplayDetails(): String {
-        return "$name ($set $collectorNo)"
-    }
-
-    fun getDisplayPrice(): String {
-        return "€$price"
-    }
 }
