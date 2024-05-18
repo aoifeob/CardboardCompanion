@@ -25,7 +25,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.example.cardboardcompanion.model.card.DetectedCard
+import com.example.cardboardcompanion.R
+import com.example.cardboardcompanion.model.card.Card
 import com.example.cardboardcompanion.ui.component.CameraContent
 import com.example.cardboardcompanion.ui.theme.CardboardCompanionTheme
 
@@ -57,7 +58,7 @@ fun IdentifyScreen() {
 }
 
 @Composable
-fun ConfirmCard(card: DetectedCard) {
+fun ConfirmCard(card: Card) {
     Dialog(onDismissRequest = { /*TODO*/ }) {
         Card(
             modifier = Modifier
@@ -119,7 +120,17 @@ fun ConfirmCard(card: DetectedCard) {
 )
 @Composable
 fun ConfirmPreview() {
-    ConfirmCard(DetectedCard("Argivian Phalanx", "DMU", "5", 0.05))
+    ConfirmCard(
+        Card(
+            1,
+            "Lightning Bolt",
+            "2X2",
+            117,
+            R.drawable.card_lightning_bolt_2x2_117,
+            2.30,
+            1
+        )
+    )
 }
 
 @Preview(name = "Light Mode")

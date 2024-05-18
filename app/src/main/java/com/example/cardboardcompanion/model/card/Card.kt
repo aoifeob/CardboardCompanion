@@ -14,7 +14,7 @@ import kotlinx.serialization.Serializable
 @Entity(tableName = "cards")
 data class Card(
     @PrimaryKey(autoGenerate = true)
-    var id: Long,
+    var id: Int,
     var name: String,
     @SerialName("set_code")
     var set: String,
