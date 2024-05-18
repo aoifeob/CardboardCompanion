@@ -21,7 +21,9 @@ import com.example.cardboardcompanion.ui.component.TopNavBar
 import com.example.cardboardcompanion.ui.navigation.Collection
 import com.example.cardboardcompanion.ui.navigation.topBarNavScreens
 import com.example.cardboardcompanion.ui.theme.CardboardCompanionTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
