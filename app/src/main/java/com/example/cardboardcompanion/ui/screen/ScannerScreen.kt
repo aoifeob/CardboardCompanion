@@ -126,7 +126,7 @@ fun ConfirmPreview() {
             "Lightning Bolt",
             "2X2",
             117,
-            R.drawable.card_lightning_bolt_2x2_117,
+            R.drawable.card_2x2_117,
             2.30,
             1
         )

@@ -70,7 +70,7 @@ private fun getTestCardCollection(): List<Card> {
             "Lightning Bolt",
             "2X2",
             117,
-            R.drawable.card_lightning_bolt_2x2_117,
+            R.drawable.card_2x2_117,
             2.30,
             4
         ),
@@ -79,7 +79,7 @@ private fun getTestCardCollection(): List<Card> {
             "Lightning Bolt",
             "CLB",
             187,
-            R.drawable.card_lightning_bolt_clb_187,
+            R.drawable.card_clb_187,
             1.18,
             2
         ),
@@ -88,7 +88,7 @@ private fun getTestCardCollection(): List<Card> {
             "Humility",
             "TPR",
             16,
-            R.drawable.card_humility_tpr_16,
+            R.drawable.card_tpr_16,
             36.76,
             1
         ),
@@ -97,7 +97,7 @@ private fun getTestCardCollection(): List<Card> {
             "Horizon Canopy",
             "IMA",
             240,
-            R.drawable.card_horizon_canopy_ima_240,
+            R.drawable.card_ima_240,
             5.25,
             4
         ),
@@ -106,7 +106,7 @@ private fun getTestCardCollection(): List<Card> {
             "Thalia's Lancers",
             "EMN",
             47,
-            R.drawable.card_thalia_s_lancers_emn_47,
+            R.drawable.card_emn_47,
             0.45,
             3
         )
