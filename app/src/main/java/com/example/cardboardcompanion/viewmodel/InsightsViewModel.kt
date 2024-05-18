@@ -1,80 +1,42 @@
 package com.example.cardboardcompanion.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.cardboardcompanion.R
+import androidx.lifecycle.viewModelScope
+import com.example.cardboardcompanion.data.repository.CardRepository
 import com.example.cardboardcompanion.model.card.Card
-import com.example.cardboardcompanion.model.card.CardCollection
-import com.example.cardboardcompanion.ui.state.InsightsUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class InsightsViewModel : ViewModel() {
-    private var cardCollection: CardCollection = getTestCardCollection()
-    private var collectionValue by mutableStateOf(calculateCollectionValue())
-    private var mostExpensiveCardsCollection = getMostExpensiveCards()
-    private val _uiState = MutableStateFlow(InsightsUiState(collectionValue, mostExpensiveCardsCollection))
+@HiltViewModel
+class InsightsViewModel @Inject constructor(
+    private val repository: CardRepository
+) : ViewModel() {
 
-    val uiState: StateFlow<InsightsUiState> = _uiState.asStateFlow()
+    private var _topCardCollection = MutableStateFlow(emptyList<Card>())
+    val topCardCollection = _topCardCollection.asStateFlow()
 
-    private fun calculateCollectionValue(): String {
-        val totalValue = cardCollection.collection.sumOf { it.price * it.quantity }
-        return "€%.${2}f".format(totalValue)
+    private var _collectionValue = MutableStateFlow("€0.00")
+    val collectionValue = _collectionValue.asStateFlow()
+
+    private var _isCollectionEmpty = MutableStateFlow(false)
+    val isCollectionEmpty = _isCollectionEmpty.asStateFlow()
+
+    fun getInsights() {
+        viewModelScope.launch {
+            repository.getTopOwnedCardsByPrice().collectLatest { cardList ->
+                _topCardCollection.tryEmit(cardList.take(5))
+                _collectionValue.tryEmit(calculateCollectionValue(cardList.sumOf { it.price * it.quantity }))
+                _isCollectionEmpty.tryEmit(cardList.isEmpty())
+            }
+        }
     }
 
-    private fun getMostExpensiveCards(): List<Card> {
-        return cardCollection.collection.sortedByDescending { it.price }.take(5)
-    }
-
-    //TODO: remove test data
-    private fun getTestCardCollection(): CardCollection {
-        return CardCollection(
-            listOf(
-                Card(
-                    1,
-                    "Lightning Bolt",
-                    "2X2",
-                    117,
-                    R.drawable.card_lightning_bolt_2x2_117,
-                    2.30,
-                    4),
-                Card(
-                    1,
-                    "Lightning Bolt",
-                    "CLB",
-                    187,
-                    R.drawable.card_lightning_bolt_clb_187,
-                    1.18,
-                    2),
-                Card(
-                    1,
-                    "Humility",
-                    "TPR",
-                    16,
-                    R.drawable.card_humility_tpr_16,
-                    36.76,
-                    1),
-                Card(
-                    1,
-                    "Horizon Canopy",
-                    "IMA",
-                    240,
-                    R.drawable.card_horizon_canopy_ima_240,
-                    5.25,
-                    4),
-                Card(
-                    1,
-                    "Thalia's Lancers",
-                    "EMN",
-                    47,
-                    R.drawable.card_thalia_s_lancers_emn_47,
-                    0.45,
-                    3)
-            )
-        )
+    private fun calculateCollectionValue(total: Double): String {
+        return "€%.${2}f".format(total)
     }
 
 }

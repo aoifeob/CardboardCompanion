@@ -2,7 +2,7 @@ package com.example.cardboardcompanion.ui.navigation
 
 import androidx.compose.runtime.Composable
 import com.example.cardboardcompanion.R
-import com.example.cardboardcompanion.ui.screen.CollectionLayout
+import com.example.cardboardcompanion.ui.screen.CollectionLayout2
 import com.example.cardboardcompanion.ui.screen.InsightsLayout
 import com.example.cardboardcompanion.ui.screen.ScannerScreen
 import com.example.cardboardcompanion.ui.screen.TutorialScreen
@@ -25,7 +25,7 @@ object Collection : Destination {
     override val icon = R.drawable.baseline_folder_24
     override val title = "My Collection"
     override val route = "collection"
-    override val screen: @Composable () -> Unit = { CollectionLayout() }
+    override val screen: @Composable () -> Unit = { CollectionLayout2() }
 }
 
 object Insights : Destination {

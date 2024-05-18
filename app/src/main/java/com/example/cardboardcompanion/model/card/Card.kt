@@ -40,50 +40,74 @@ interface CardDao {
     @Query("SELECT * FROM cards ORDER BY name ASC")
     fun getCards(): Flow<List<Card>> = flow {
         emit(
-            listOf(
-                Card(
-                    1,
-                    "Lightning Bolt",
-                    "2X2",
-                    117,
-                    R.drawable.card_lightning_bolt_2x2_117,
-                    0.13,
-                    1
-                )
-            )
+            getTestCardCollection()
         )
     }
 
     @Query("SELECT * FROM cards WHERE quantity > 0 ORDER BY name ASC")
-    fun getOwnedCards() : Flow<List<Card>>
+    fun getOwnedCards(): Flow<List<Card>> = flow {
+        emit(
+            getTestCardCollection()
+        )
+    }
+
+    @Query("SELECT * FROM cards WHERE quantity > 0 ORDER BY price DESC LIMIT 5")
+    fun getTopOwnedCardsByPrice(): Flow<List<Card>> = flow {
+        emit(
+            getTestCardCollection().sortedByDescending { it.price }.take(5)
+        )
+    }
 }
 
-//@HiltViewModel
-//class TestVM @Inject constructor(private val repository: CardRepository) : ViewModel() {
-//    private val _cards = MutableStateFlow(emptyList<Card>())
-//    val cards = _cards.asStateFlow()
-//
-//    fun getCardList() {
-//        viewModelScope.launch(IO) {
-//            repository.getCards().collectLatest {
-//                _cards.tryEmit(it)
-//            }
-//        }
-//    }
-//}
-//
-//@Composable
-//fun TestUI(vm: TestVM = hiltViewModel<TestVM>()) {
-//    LaunchedEffect(key1 = true, block = {
-//        vm.getCardList()
-//    })
-//
-//
-//    val cards by vm.cards.collectAsStateWithLifecycle()
-//
-//    Text(text = cards.size.toString())
-//
-//}
+private fun getTestCardCollection(): List<Card> {
+    return listOf(
+        Card(
+            1,
+            "Lightning Bolt",
+            "2X2",
+            117,
+            R.drawable.card_lightning_bolt_2x2_117,
+            2.30,
+            4
+        ),
+        Card(
+            1,
+            "Lightning Bolt",
+            "CLB",
+            187,
+            R.drawable.card_lightning_bolt_clb_187,
+            1.18,
+            2
+        ),
+        Card(
+            1,
+            "Humility",
+            "TPR",
+            16,
+            R.drawable.card_humility_tpr_16,
+            36.76,
+            1
+        ),
+        Card(
+            1,
+            "Horizon Canopy",
+            "IMA",
+            240,
+            R.drawable.card_horizon_canopy_ima_240,
+            5.25,
+            4
+        ),
+        Card(
+            1,
+            "Thalia's Lancers",
+            "EMN",
+            47,
+            R.drawable.card_thalia_s_lancers_emn_47,
+            0.45,
+            3
+        )
+    )
+}
 
 data class CardCollection(var collection: List<Card>) {
     fun isEmpty(): Boolean {
