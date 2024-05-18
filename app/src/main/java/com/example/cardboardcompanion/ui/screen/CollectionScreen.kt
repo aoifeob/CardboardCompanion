@@ -60,15 +60,15 @@ import com.example.cardboardcompanion.viewmodel.CollectionViewModel
 import kotlin.math.roundToInt
 
 @Composable
-fun CollectionLayout2() {
-    CollectionLayout2(
+fun CollectionLayout() {
+    CollectionLayout(
         collectionViewModel = hiltViewModel<CollectionViewModel>(),
         modifier = Modifier
     )
 }
 
 @Composable
-private fun CollectionLayout2(
+private fun CollectionLayout(
     collectionViewModel: CollectionViewModel,
     modifier: Modifier
 ) {
@@ -450,6 +450,6 @@ private fun CardDetails(card: Card) {
 @Composable
 private fun CollectionViewPreview() {
     CardboardCompanionTheme {
-        CollectionLayout2()
+        CollectionLayout()
     }
 }
