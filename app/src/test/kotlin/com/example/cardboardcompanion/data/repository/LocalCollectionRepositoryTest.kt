@@ -1,8 +1,6 @@
 package com.example.cardboardcompanion.data.repository
 
 import com.example.cardboardcompanion.fixture.testCollection
-import com.example.cardboardcompanion.fixture.testCollectorNo
-import com.example.cardboardcompanion.fixture.testSet
 import com.example.cardboardcompanion.fixture.testTop5Collection
 import com.example.cardboardcompanion.model.SortParam
 import com.example.cardboardcompanion.model.card.CardDao
