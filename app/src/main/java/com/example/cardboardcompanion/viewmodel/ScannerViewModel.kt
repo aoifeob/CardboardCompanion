@@ -45,7 +45,7 @@ class ScannerViewModel @Inject constructor(
             if (detectedCardResult.isRight() && detectedCardResult.getOrNull() != null) {
                 currentDetectedCard = detectedCardResult.getOrNull()
                 if (currentDetectedCard != null) {
-                    shouldShowConfirmDialog = true;
+                    shouldShowConfirmDialog = true
                 }
             } else if (detectedCardResult.isLeft() && detectedCardResult.leftOrNull() != null
             ) {
