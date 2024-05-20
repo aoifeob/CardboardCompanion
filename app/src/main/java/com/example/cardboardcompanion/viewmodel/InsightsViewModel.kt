@@ -2,7 +2,7 @@ package com.example.cardboardcompanion.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cardboardcompanion.data.repository.CardRepository
+import com.example.cardboardcompanion.data.repository.CollectionRepository
 import com.example.cardboardcompanion.model.card.Card
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InsightsViewModel @Inject constructor(
-    private val repository: CardRepository
+    private val repository: CollectionRepository
 ) : ViewModel() {
 
     private var _topCardCollection = MutableStateFlow(emptyList<Card>())

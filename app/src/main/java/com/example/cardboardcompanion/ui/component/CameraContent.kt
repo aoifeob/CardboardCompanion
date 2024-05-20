@@ -3,8 +3,8 @@ package com.example.cardboardcompanion.ui.component
 import android.content.Context
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.camera.core.AspectRatio
-import androidx.camera.view.CameraController
+import androidx.camera.core.ImageAnalysis.COORDINATE_SYSTEM_VIEW_REFERENCED
+import androidx.camera.mlkit.vision.MlKitAnalyzer
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Box
@@ -15,21 +15,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 
 @Composable
-fun CameraContent() {
+fun CameraContent(onCardTextDetected: (List<String>) -> Unit) {
 
     val context: Context = LocalContext.current
-    val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleOwner: LifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
     val cameraController: LifecycleCameraController =
         remember { LifecycleCameraController(context) }
 
-    fun onCardDetected(card: String){
-        /* TODO */
+    fun onDetectedTextUpdated(text: List<String>) {
+        onCardTextDetected(text)
     }
 
     Scaffold { paddingValues: PaddingValues ->
@@ -54,7 +56,7 @@ fun CameraContent() {
                             cameraController = cameraController,
                             lifecycleOwner = lifecycleOwner,
                             previewView = previewView,
-                            onDetectedTextUpdated = ::onCardDetected
+                            onDetectedTextUpdated = ::onDetectedTextUpdated
                         )
                     }
                 }
@@ -68,13 +70,20 @@ private fun detectCard(
     cameraController: LifecycleCameraController,
     lifecycleOwner: LifecycleOwner,
     previewView: PreviewView,
-    onDetectedTextUpdated: (String) -> Unit
+    onDetectedTextUpdated: (List<String>) -> Unit
 ) {
-    cameraController.imageAnalysisTargetSize = CameraController.OutputSize(AspectRatio.RATIO_16_9)
-//    cameraController.setImageAnalysisAnalyzer(
-//        ContextCompat.getMainExecutor(context),
-//        CardRecogniser(onDetectedTextUpdated = onDetectedTextUpdated)
-//    )
+    val recogniser = TextRecognition.getClient(TextRecognizerOptions.Builder().build())
+
+    cameraController.setImageAnalysisAnalyzer(
+        ContextCompat.getMainExecutor(context),
+        MlKitAnalyzer(
+            listOf(recogniser),
+            COORDINATE_SYSTEM_VIEW_REFERENCED,
+            ContextCompat.getMainExecutor(context)
+        ) { result ->
+            result.getValue(recogniser)?.let { onDetectedTextUpdated(it.textBlocks.map { it.text }) }
+        }
+    )
 
     cameraController.bindToLifecycle(lifecycleOwner)
     previewView.controller = cameraController
@@ -83,5 +92,5 @@ private fun detectCard(
 @Preview
 @Composable
 fun PreviewCameraContent() {
-    CameraContent()
+    CameraContent(onCardTextDetected = {})
 }

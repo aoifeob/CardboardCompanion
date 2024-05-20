@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun OnboardingScreen(modifier: Modifier = Modifier) {
+fun OnboardingContent(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -30,11 +29,5 @@ fun OnboardingScreen(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.bodyMedium,
         )
         Spacer(modifier = Modifier.padding(2.dp))
-        Button(
-            modifier = Modifier.padding(vertical = 24.dp),
-            onClick = { /* TODO: implement navigation */}
-        ) {
-            Text("Scan a Card")
-        }
     }
 }

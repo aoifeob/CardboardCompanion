@@ -1,26 +1,28 @@
 package com.example.cardboardcompanion.model.card
 
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Entity
+import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
-import com.example.cardboardcompanion.R
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.util.Locale
 
 @Serializable
 @Entity(tableName = "cards")
 data class Card(
     @PrimaryKey(autoGenerate = true)
-    var id: Int,
+    var id: Int = 0,
     var name: String,
-    @SerialName("set_code")
+    @ColumnInfo(name = "set_code")
     var set: String,
-    @SerialName("collector_no")
-    var collectorNo: Int,
-    var image: Int,
+    @ColumnInfo(name = "collector_no")
+    var collectorNo: String,
+    var image: String,
     var price: Double,
     var quantity: Int
 ) {
@@ -30,85 +32,77 @@ data class Card(
     }
 
     fun getDisplayName(): String {
-        return "($set) $name"
-    }
-
-    fun getDisplayDetails(): String {
-        return "$name ($set $collectorNo)"
+        return "(${set.uppercase(Locale.ENGLISH)}) $name"
     }
 
 }
 
 @Dao
 interface CardDao {
-    @Query("SELECT * FROM cards ORDER BY name ASC")
-    fun getCards(): Flow<List<Card>> = flow {
-        emit(
-            getTestCardCollection()
-        )
-    }
 
     @Query("SELECT * FROM cards WHERE quantity > 0 ORDER BY name ASC")
-    fun getOwnedCards(): Flow<List<Card>> = flow {
-        emit(
-            getTestCardCollection()
-        )
-    }
+    fun getOwnedCards(): Flow<List<Card>>
 
     @Query("SELECT * FROM cards WHERE quantity > 0 ORDER BY price DESC LIMIT 5")
-    fun getTopOwnedCardsByPrice(): Flow<List<Card>> = flow {
-        emit(
-            getTestCardCollection().sortedByDescending { it.price }.take(5)
-        )
-    }
+    fun getTopOwnedCardsByPrice(): Flow<List<Card>>
+
+    @Query("SELECT * FROM cards WHERE set_code LIKE :set AND collector_no LIKE :collectorNo")
+    fun findCard(set: String, collectorNo: String): Flow<Card?>
+
+    @Insert
+    fun addCard(card: Card): Long?
+
+    @Update
+    fun updateQuantity(card: Card): Int?
+
 }
 
-private fun getTestCardCollection(): List<Card> {
-    return listOf(
-        Card(
-            1,
-            "Lightning Bolt",
-            "2X2",
-            117,
-            R.drawable.card_2x2_117,
-            2.30,
-            4
-        ),
-        Card(
-            1,
-            "Lightning Bolt",
-            "CLB",
-            187,
-            R.drawable.card_clb_187,
-            1.18,
-            2
-        ),
-        Card(
-            1,
-            "Humility",
-            "TPR",
-            16,
-            R.drawable.card_tpr_16,
-            36.76,
-            1
-        ),
-        Card(
-            1,
-            "Horizon Canopy",
-            "IMA",
-            240,
-            R.drawable.card_ima_240,
-            5.25,
-            4
-        ),
-        Card(
-            1,
-            "Thalia's Lancers",
-            "EMN",
-            47,
-            R.drawable.card_emn_47,
-            0.45,
-            3
+data class DetectedCard(
+    var set: String,
+    var collectorNo: String
+)
+
+@Serializable
+data class ScryfallCard(
+    var name: String,
+    var set: String,
+    @SerialName("collector_number")
+    var collectorNo: String,
+    @SerialName("prices")
+    var price: ScryfallPrice,
+    @SerialName("image_uris")
+    var imageSource: ScryfallImageSource
+) {
+
+    fun mapToCard(): Card {
+        return Card(
+            name = name,
+            set = set,
+            collectorNo = collectorNo,
+            price = price.eurPrice,
+            image = imageSource.imageUri,
+            quantity = 1
         )
-    )
+    }
+
+    fun getDisplayPrice(): String {
+        return "€%.${2}f".format(price.eurPrice)
+    }
+
+    fun getDisplayDetails(): String {
+        return "$name (${set.uppercase(Locale.ENGLISH)} $collectorNo)"
+    }
+
 }
+
+@Serializable
+data class ScryfallPrice(
+    @SerialName("eur")
+    val eurPrice: Double
+)
+
+@Serializable
+data class ScryfallImageSource(
+    @SerialName("normal")
+    val imageUri: String
+)

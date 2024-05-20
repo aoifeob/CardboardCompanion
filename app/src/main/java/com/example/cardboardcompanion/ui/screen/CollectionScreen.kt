@@ -1,7 +1,6 @@
 package com.example.cardboardcompanion.ui.screen
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,11 +49,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
 import com.example.cardboardcompanion.R
 import com.example.cardboardcompanion.model.SortParam
 import com.example.cardboardcompanion.model.card.Card
 import com.example.cardboardcompanion.model.filter.Filter
-import com.example.cardboardcompanion.ui.component.OnboardingScreen
+import com.example.cardboardcompanion.ui.component.OnboardingContent
 import com.example.cardboardcompanion.ui.theme.CardboardCompanionTheme
 import com.example.cardboardcompanion.viewmodel.CollectionViewModel
 import kotlin.math.roundToInt
@@ -82,7 +82,7 @@ private fun CollectionLayout(
     Column {
         Surface(modifier = modifier.weight(1f), color = MaterialTheme.colorScheme.background) {
             if (isCollectionEmpty) {
-                OnboardingScreen()
+                OnboardingContent()
             } else {
                 CollectionScreen(
                     cards, collectionViewModel.searchParam,
@@ -130,7 +130,7 @@ private fun CollectionScreen(
                 Text(
                     "No results found for: $searchParam",
                     fontStyle = FontStyle.Italic,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.error,
                     modifier = Modifier
                         .padding(15.dp)
                         .align(Alignment.CenterHorizontally)
@@ -299,7 +299,7 @@ private fun FilterMenu(
                         }
                         Spacer(modifier = Modifier.weight(1f))
                         Button(onClick = {
-                            onFilterExecuted(Filter(minPrice, maxPrice, null))
+                            onFilterExecuted(Filter(minPrice, maxPrice))
                             expanded = false
                         }) {
                             Text("Apply")
@@ -384,8 +384,10 @@ private fun Card(card: Card) {
 @Composable
 private fun CardPreview(card: Card) {
     Surface {
-        Image(
-            painter = painterResource(id = card.image),
+        AsyncImage(
+            model = card.image,
+            placeholder = painterResource(R.drawable.card_default),
+            error = painterResource(id = R.drawable.loading_image),
             contentDescription = null,
             modifier = Modifier
                 .size(350.dp)

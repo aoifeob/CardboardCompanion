@@ -26,8 +26,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
+import com.example.cardboardcompanion.R
 import com.example.cardboardcompanion.model.card.Card
-import com.example.cardboardcompanion.ui.component.OnboardingScreen
+import com.example.cardboardcompanion.ui.component.OnboardingContent
 import com.example.cardboardcompanion.ui.theme.CardboardCompanionTheme
 import com.example.cardboardcompanion.viewmodel.InsightsViewModel
 
@@ -55,7 +57,7 @@ private fun InsightsLayout(
     Column(modifier = modifier) {
         Surface(modifier = modifier.weight(1f), color = MaterialTheme.colorScheme.background) {
             if (isCollectionEmpty) {
-                OnboardingScreen()
+                OnboardingContent()
             } else {
                 InsightsScreen(collectionValue, topCards)
             }
@@ -79,7 +81,7 @@ private fun InsightsScreen(
         if (topCards.size < 5) {
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = "Add more cards to your collection to see more insights.",
+                text = "Add more cards to your collection to see additional insights.",
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(all = 4.dp),
                 color = MaterialTheme.colorScheme.secondary,
@@ -151,13 +153,20 @@ private fun CardDisplay(card: Card) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(id = card.image),
+        AsyncImage(
+            model = card.image,
+            placeholder = painterResource(R.drawable.card_default),
             contentDescription = null,
             modifier = Modifier
                 .size(150.dp)
         )
         Spacer(modifier = Modifier.padding(all = 5.dp))
+        Text(
+            text = card.getDisplayName(),
+            modifier = Modifier.padding(all = 4.dp),
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold
+        )
         Surface(
             shape = MaterialTheme.shapes.medium,
             shadowElevation = 1.dp,

@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    kotlin("plugin.serialization") version "1.4.21"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
 }
@@ -76,8 +76,15 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.json.v151)
     implementation(libs.androidx.lifecycle.runtime.compose.android)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.okhttp)
+    implementation(libs.arrow.core)
+    implementation(libs.arrow.fx.coroutines)
+    implementation(libs.androidx.camera.mlkit.vision)
+    implementation(libs.coil.compose)
 
     kapt(libs.hilt.android.compiler)
     kapt(libs.androidx.hilt.compiler)

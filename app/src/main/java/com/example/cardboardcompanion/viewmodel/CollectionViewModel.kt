@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cardboardcompanion.data.repository.CardRepository
+import com.example.cardboardcompanion.data.repository.CollectionRepository
 import com.example.cardboardcompanion.model.SortParam
 import com.example.cardboardcompanion.model.card.Card
 import com.example.cardboardcompanion.model.filter.Filter
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CollectionViewModel @Inject constructor(
-    private val repository: CardRepository
+    private val repository: CollectionRepository
 ) : ViewModel() {
 
     private val _cardCollection = MutableStateFlow(emptyList<Card>())

@@ -6,6 +6,6 @@ import com.example.cardboardcompanion.model.card.Card
 import com.example.cardboardcompanion.model.card.CardDao
 
 @Database(entities = [Card::class], version = 1, exportSchema = false)
-abstract class CardDatabase : RoomDatabase() {
+abstract class CollectionDatabase : RoomDatabase() {
     abstract val cardDao: CardDao
 }
