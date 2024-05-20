@@ -57,11 +57,6 @@ interface CardDao {
 
 }
 
-data class DetectedCard(
-    var set: String,
-    var collectorNo: String
-)
-
 @Serializable
 data class ScryfallCard(
     var name: String,

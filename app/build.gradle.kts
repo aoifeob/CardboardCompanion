@@ -93,6 +93,10 @@ dependencies {
     kapt(libs.compiler)
 
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+
+    testRuntimeOnly(libs.byte.buddy)
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)

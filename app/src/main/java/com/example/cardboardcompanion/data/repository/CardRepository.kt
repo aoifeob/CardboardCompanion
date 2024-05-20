@@ -21,7 +21,7 @@ class NetworkCardRepository @Inject constructor(
         set: String,
         collectorNo: String
     ): Either<CardValidationError, ScryfallCard?> {
-        return dataSource.request(set, collectorNo)
+        return dataSource.validateCard(set, collectorNo)
     }
 
 }

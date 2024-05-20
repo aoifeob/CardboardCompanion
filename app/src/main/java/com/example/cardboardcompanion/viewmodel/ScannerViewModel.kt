@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.cardboardcompanion.data.repository.CardRepository
 import com.example.cardboardcompanion.data.repository.CollectionRepository
 import com.example.cardboardcompanion.data.source.CardValidationError
-import com.example.cardboardcompanion.model.card.DetectedCard
 import com.example.cardboardcompanion.model.card.ScryfallCard
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -33,14 +32,13 @@ class ScannerViewModel @Inject constructor(
     fun validateCard() {
         val cardDetails = extractCardDetails()
         if (cardDetails.first != null && cardDetails.second != null) {
-            val detectedCard = DetectedCard(cardDetails.first!!, cardDetails.second!!)
-            validateCard(detectedCard)
+            validateCard(cardDetails.first!!, cardDetails.second!!)
         }
     }
 
-    private fun validateCard(card: DetectedCard) {
+    private fun validateCard(set: String, collectorNo: String) {
         viewModelScope.launch {
-            val detectedCardResult = cardRepository.findCard(card.set, card.collectorNo)
+            val detectedCardResult = cardRepository.findCard(set, collectorNo)
 
             if (detectedCardResult.isRight() && detectedCardResult.getOrNull() != null) {
                 currentDetectedCard = detectedCardResult.getOrNull()

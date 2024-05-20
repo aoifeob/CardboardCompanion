@@ -13,7 +13,7 @@ class NetworkCardDataSource @Inject constructor(
     private val api: ScryfallApiService
 ) {
 
-    suspend fun request(
+    suspend fun validateCard(
         set: String,
         collectorNo: String
     ): Either<CardValidationError, ScryfallCard?> {
