@@ -18,6 +18,8 @@ interface CollectionRepository {
 
     suspend fun addCard(card: Card)
 
+    suspend fun updateCardQuantity(card: Card)
+
     suspend fun getOwnedCards(
         searchString: String,
         filter: Filter?,
@@ -42,26 +44,23 @@ class LocalCollectionRepository @Inject constructor(
     }
 
     override suspend fun addCard(card: Card) {
-        var matchingCard: Card? = null
         withContext(Dispatchers.IO) {
-            dao.findCard(card.set, card.collectorNo).map {
-                matchingCard = it
-            }
+            dao.addCard(card)
+        }
+    }
 
-            if (matchingCard == null) {
-                dao.addCard(card)
-            } else {
-                val updatedCard = matchingCard!!.copy(
-                    id = matchingCard!!.id,
-                    name = matchingCard!!.name,
-                    set = matchingCard!!.set,
-                    collectorNo = matchingCard!!.collectorNo,
-                    image = matchingCard!!.image,
-                    price = matchingCard!!.price,
-                    quantity = matchingCard!!.quantity + 1
-                )
-                dao.updateQuantity(updatedCard)
-            }
+    override suspend fun updateCardQuantity(card: Card) {
+        withContext(Dispatchers.IO) {
+            val updatedCard = card.copy(
+                id = card.id,
+                name = card.name,
+                set = card.set,
+                collectorNo = card.collectorNo,
+                image = card.image,
+                price = card.price,
+                quantity = card.quantity + 1
+            )
+            dao.updateQuantity(updatedCard)
         }
     }
 

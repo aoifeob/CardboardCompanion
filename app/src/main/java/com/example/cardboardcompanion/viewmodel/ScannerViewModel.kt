@@ -8,8 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.cardboardcompanion.data.repository.CardRepository
 import com.example.cardboardcompanion.data.repository.CollectionRepository
 import com.example.cardboardcompanion.data.source.CardValidationError
+import com.example.cardboardcompanion.model.card.Card
 import com.example.cardboardcompanion.model.card.ScryfallCard
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
@@ -20,10 +25,20 @@ class ScannerViewModel @Inject constructor(
     private val collectionRepository: CollectionRepository
 ) : ViewModel() {
 
+    private val _cardCollection = MutableStateFlow(emptyList<Card>())
+
     private var detectedCardText: List<String> by mutableStateOf(emptyList())
     internal var shouldShowConfirmDialog: Boolean by mutableStateOf(false)
     internal var currentDetectedCard: ScryfallCard? by mutableStateOf(null)
     internal var cardValidationError: CardValidationError? by mutableStateOf(null)
+
+    fun getOwnedCards() {
+        viewModelScope.launch(Dispatchers.IO) {
+            collectionRepository.getOwnedCards().collectLatest {
+                _cardCollection.tryEmit(it)
+            }
+        }
+    }
 
     fun updateDetectedCardText(detected: List<String>) {
         detectedCardText = detected
@@ -63,7 +78,14 @@ class ScannerViewModel @Inject constructor(
 
     fun addCardToCollection() {
         viewModelScope.launch {
-            currentDetectedCard?.let { collectionRepository.addCard(it.mapToCard())}
+            currentDetectedCard?.let { scryfallCard ->
+                val mappedCard = scryfallCard.mapToCard()
+                val matchingCard = _cardCollection.value.firstOrNull { mappedCard.isSameCard(it) }
+                if (matchingCard != null)
+                    collectionRepository.updateCardQuantity(matchingCard)
+                else
+                    collectionRepository.addCard(mappedCard)
+            }
         }
         clearDetectedCard()
     }

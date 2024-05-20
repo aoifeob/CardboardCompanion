@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -49,6 +50,9 @@ fun ScannerScreen() {
 fun IdentifyScreen(
     viewModel: ScannerViewModel
 ) {
+    LaunchedEffect(key1 = true, block = {
+        viewModel.getOwnedCards()
+    })
     CameraContent(onCardTextDetected = { viewModel.updateDetectedCardText(it) })
     if (viewModel.shouldShowConfirmDialog && viewModel.currentDetectedCard != null) {
         ConfirmCardDialog(

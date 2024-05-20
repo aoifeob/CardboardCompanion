@@ -35,6 +35,11 @@ data class Card(
         return "(${set.uppercase(Locale.ENGLISH)}) $name"
     }
 
+    fun isSameCard(other: Card): Boolean {
+        return set == other.set &&
+                collectorNo == other.collectorNo
+    }
+
 }
 
 @Dao

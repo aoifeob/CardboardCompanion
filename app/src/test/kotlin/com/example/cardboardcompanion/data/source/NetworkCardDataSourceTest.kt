@@ -4,9 +4,6 @@ import com.example.cardboardcompanion.data.sevice.ScryfallApiService
 import com.example.cardboardcompanion.fixture.testCollectorNo
 import com.example.cardboardcompanion.fixture.testScryfallCard
 import com.example.cardboardcompanion.fixture.testSet
-import com.example.cardboardcompanion.model.card.ScryfallCard
-import com.example.cardboardcompanion.model.card.ScryfallImageSource
-import com.example.cardboardcompanion.model.card.ScryfallPrice
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
