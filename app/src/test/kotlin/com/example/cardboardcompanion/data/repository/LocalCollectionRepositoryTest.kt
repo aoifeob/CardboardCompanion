@@ -60,7 +60,7 @@ class LocalCollectionRepositoryTest {
     }
 
     @Test
-    fun localCollectionRepository_addCard_shouldAddNewCardToDatabase_whenCardDoesNotExistInDatabase() = runTest {
+    fun localCollectionRepository_addCard_shouldCallAddCardDaoMethod() = runTest {
         val spyDao = spyk<CardDao>()
         val repositoryWithSpy = LocalCollectionRepository(spyDao)
         val newCard = testCollection[0]
@@ -71,7 +71,7 @@ class LocalCollectionRepositoryTest {
     }
 
     @Test
-    fun localCollectionRepository_updateCard_shouldUpdateCardInDatabase_whenCardExistsInDatabase() = runTest {
+    fun localCollectionRepository_updateCard_shouldCallUpdateCardDaoMethod() = runTest {
         val spyDao = spyk<CardDao>()
         val repositoryWithSpy = LocalCollectionRepository(spyDao)
         val newCard = testCollection[0]
@@ -82,7 +82,7 @@ class LocalCollectionRepositoryTest {
     }
 
     @Test
-    fun localCollectionRepository_updateCardQuantity_shouldUpdateCardQuantityInDatabase_whenCardExistsInDatabase() = runTest {
+    fun localCollectionRepository_updateCardQuantity_shouldCallUpdateCardDaoMethod() = runTest {
         val spyDao = spyk<CardDao>()
         val repositoryWithSpy = LocalCollectionRepository(spyDao)
         val newCard = testCollection[0]
@@ -233,6 +233,17 @@ class LocalCollectionRepositoryTest {
         val actualResult  = repository.getOwnedCards(searchParam, filter, sortParam).first()
 
         assertEquals(expectedResult, actualResult)
+    }
+
+    @Test
+    fun localCollectionRepository_deleteCard_shouldCallDeleteCardDaoMethod() = runTest {
+        val spyDao = spyk<CardDao>()
+        val repositoryWithSpy = LocalCollectionRepository(spyDao)
+        val newCard = testCollection[0]
+
+        repositoryWithSpy.deleteCard(newCard)
+
+        verify { spyDao.deleteCard(newCard) }
     }
 
 }

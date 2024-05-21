@@ -52,6 +52,12 @@ class CollectionViewModel @Inject constructor(
         }
     }
 
+    fun deleteOwnedCard(card: Card){
+        viewModelScope.launch {
+            repository.deleteCard(card)
+        }
+    }
+
     private fun updateOwnedCards(
         searchParam: String,
         sortParam: SortParam,
