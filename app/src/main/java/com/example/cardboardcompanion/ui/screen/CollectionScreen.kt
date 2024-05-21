@@ -2,6 +2,7 @@ package com.example.cardboardcompanion.ui.screen
 
 import android.content.res.Configuration
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -39,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -185,6 +188,8 @@ private fun SearchMenu(
     onSearchExecuted: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Button(
         onClick = { expanded = !expanded },
         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
@@ -193,11 +198,19 @@ private fun SearchMenu(
     }
 
     if (expanded) {
-        Box() {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp)
+        ) {
             SearchBar(
                 query = searchParam,
                 onQueryChange = onSearchParamUpdated,
-                onSearch = onSearchExecuted,
+                onSearch = {
+                    onSearchExecuted(searchParam)
+                    expanded = false
+                    keyboardController?.hide()
+                },
                 placeholder = {
                     Text(text = "e.g. Bolt", fontStyle = FontStyle.Italic)
                 },
@@ -205,6 +218,19 @@ private fun SearchMenu(
                     Icon(
                         imageVector = Icons.Default.Search,
                         tint = MaterialTheme.colorScheme.onSurface,
+                        contentDescription = null
+                    )
+                },
+                trailingIcon = {
+                    Icon(
+                        modifier = Modifier.clickable {
+                            onSearchParamUpdated("")
+                            onSearchExecuted("")
+                            expanded = false
+                            keyboardController?.hide()
+                        },
+                        imageVector = Icons.Default.Clear,
+                        tint = MaterialTheme.colorScheme.error,
                         contentDescription = null
                     )
                 },
