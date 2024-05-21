@@ -99,10 +99,10 @@ class ScannerViewModel @Inject constructor(
 
     private fun extractSet(): String? {
         val setTextBlock = detectedCardText.firstOrNull {
-            it.contains(Regex("^[A-Z0-9]{3,5}(|.+EN)")) && !it.contains(Regex("^[0-9]{3}"))
+            it.contains(Regex("^[A-Z0-9]{3}(|.+EN)")) && !it.contains(Regex("^[0-9]{3}"))
         }
         if (setTextBlock != null) {
-            return (Regex("^[A-Z0-9]{3,5}")).find(setTextBlock)?.value?.lowercase(Locale.ENGLISH)
+            return (Regex("^[A-Z0-9]{3}")).find(setTextBlock)?.value?.lowercase(Locale.ENGLISH)
         }
         return null
     }
