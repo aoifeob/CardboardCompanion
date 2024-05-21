@@ -12,11 +12,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
@@ -25,6 +27,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.SearchBar
@@ -95,7 +98,8 @@ private fun CollectionLayout(
                     collectionViewModel.sortParam,
                     { collectionViewModel.onSortExecuted(it) },
                     collectionViewModel.filter,
-                    { collectionViewModel.onFilterExecuted(it) }
+                    { collectionViewModel.onFilterExecuted(it) },
+                    { collectionViewModel.deleteOwnedCard(it) }
                 )
             }
         }
@@ -112,7 +116,8 @@ private fun CollectionScreen(
     sortParam: SortParam,
     onSortParamUpdated: (SortParam) -> Unit,
     filter: Filter?,
-    onFilterExecuted: (Filter?) -> Unit
+    onFilterExecuted: (Filter?) -> Unit,
+    onDeleteClick: (Card) -> Unit
 ) {
 
     Column {
@@ -151,7 +156,7 @@ private fun CollectionScreen(
             }
         }
 
-        CardCollection(cards)
+        CardCollection(cards, onDeleteClick)
 
     }
 }
@@ -380,27 +385,27 @@ private fun SortMenu(sortParam: SortParam, onSortParamUpdated: (SortParam) -> Un
 }
 
 @Composable
-private fun CardCollection(cards: List<Card>) {
+private fun CardCollection(cards: List<Card>, onDeleteClick: (Card) -> Unit) {
     LazyColumn(
         modifier = Modifier
             .padding(all = 10.dp)
             .fillMaxWidth()
     ) {
         items(cards) { card ->
-            Card(card)
+            Card(card, onDeleteClick)
         }
     }
 }
 
 @Composable
-private fun Card(card: Card) {
+private fun Card(card: Card, onDeleteClick: (Card) -> Unit) {
     Column(
         modifier = Modifier.padding(all = 10.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row {
-            CardPreview(card)
+            CardPreview(card, onDeleteClick)
         }
         Spacer(modifier = Modifier.height(4.dp))
         CardDetails(card)
@@ -408,8 +413,44 @@ private fun Card(card: Card) {
 }
 
 @Composable
-private fun CardPreview(card: Card) {
+fun DropDownCardOptionsMenu(
+    card: Card,
+    onDeleteClick: (Card) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentSize(Alignment.TopEnd)
+    ) {
+        IconButton(onClick = { expanded = !expanded }) {
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = "More"
+            )
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("Delete", color = MaterialTheme.colorScheme.error) },
+                onClick = {
+                    onDeleteClick(card)
+                    expanded = false
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun CardPreview(card: Card, onDeleteClick: (Card) -> Unit) {
     Surface {
+        DropDownCardOptionsMenu(card, onDeleteClick)
+
         AsyncImage(
             model = card.image,
             placeholder = painterResource(id = R.drawable.loading_image),
