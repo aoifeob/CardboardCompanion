@@ -27,6 +27,8 @@ interface CollectionRepository {
         filter: Filter?,
         sortParam: SortParam
     ): Flow<List<Card>>
+
+    suspend fun deleteCard(card: Card)
 }
 
 class LocalCollectionRepository @Inject constructor(
@@ -69,6 +71,12 @@ class LocalCollectionRepository @Inject constructor(
                 quantity = card.quantity + 1
             )
             dao.updateCard(updatedCard)
+        }
+    }
+
+    override suspend fun deleteCard(card: Card) {
+        withContext(Dispatchers.IO) {
+            dao.deleteCard(card)
         }
     }
 

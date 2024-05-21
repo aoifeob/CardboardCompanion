@@ -12,9 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -120,6 +122,7 @@ fun ConfirmCardDialog(
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center
                     )
+                    HorizontalDivider()
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -137,6 +140,7 @@ fun ConfirmCardDialog(
                                 "Cancel", style = MaterialTheme.typography.bodyLarge
                             )
                         }
+                        VerticalDivider(modifier = Modifier.padding(5.dp))
                         TextButton(
                             onClick = { onConfirmAddCard() },
                             modifier = Modifier.padding(8.dp),
@@ -192,8 +196,9 @@ fun ValidationErrorDialog(
                             "Unable to identify card.\n" +
                                     "Ensure the whole card is visible on screen and that the image is in focus and try again.",
                         style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
+                    HorizontalDivider()
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),

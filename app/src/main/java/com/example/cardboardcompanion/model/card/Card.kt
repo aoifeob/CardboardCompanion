@@ -2,6 +2,7 @@ package com.example.cardboardcompanion.model.card
 
 import androidx.room.ColumnInfo
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.PrimaryKey
@@ -59,6 +60,9 @@ interface CardDao {
 
     @Update
     fun updateCard(card: Card): Int?
+
+    @Delete
+    fun deleteCard(card: Card): Int?
 
 }
 
