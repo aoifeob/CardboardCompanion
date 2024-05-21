@@ -18,6 +18,8 @@ interface CollectionRepository {
 
     suspend fun addCard(card: Card)
 
+    suspend fun updateCard(card: Card)
+
     suspend fun updateCardQuantity(card: Card)
 
     suspend fun getOwnedCards(
@@ -49,6 +51,12 @@ class LocalCollectionRepository @Inject constructor(
         }
     }
 
+    override suspend fun updateCard(card: Card) {
+        withContext(Dispatchers.IO) {
+            dao.updateCard(card)
+        }
+    }
+
     override suspend fun updateCardQuantity(card: Card) {
         withContext(Dispatchers.IO) {
             val updatedCard = card.copy(
@@ -60,7 +68,7 @@ class LocalCollectionRepository @Inject constructor(
                 price = card.price,
                 quantity = card.quantity + 1
             )
-            dao.updateQuantity(updatedCard)
+            dao.updateCard(updatedCard)
         }
     }
 

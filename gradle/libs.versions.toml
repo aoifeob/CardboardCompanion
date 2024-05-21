@@ -8,6 +8,7 @@ compiler = "1.1.1"
 compilerVersion = "1.1.1"
 hiltAndroid = "2.51.1"
 hiltNavigationCompose = "1.2.0"
+hiltWork = "1.0.0"
 kotlin = "1.9.22"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -27,6 +28,7 @@ textRecognition = "16.0.0"
 lifecycleRuntimeComposeAndroid = "2.8.0"
 workRuntimeKtx = "2.9.0"
 cameraMlkitVision = "1.4.0-beta01"
+workRuntimeKtxVersion = "2.5.0"
 
 [libraries]
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2" }
@@ -36,10 +38,12 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltNavigationCompose" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltNavigationCompose" }
+androidx-hilt-work-v100 = { module = "androidx.hilt:hilt-work", version.ref = "hiltWork" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
+androidx-work-runtime-ktx-v281 = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtxVersion" }
 arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrowCore" }
 arrow-fx-coroutines = { module = "io.arrow-kt:arrow-fx-coroutines", version.ref = "arrowCore" }
 byte-buddy = { module = "net.bytebuddy:byte-buddy", version.ref = "byteBuddy" }

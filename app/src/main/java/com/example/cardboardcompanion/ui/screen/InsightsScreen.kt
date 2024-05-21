@@ -154,7 +154,8 @@ private fun CardDisplay(card: Card) {
     ) {
         AsyncImage(
             model = card.image,
-            placeholder = painterResource(R.drawable.card_default),
+            placeholder = painterResource(id = R.drawable.loading_image),
+            error = painterResource(R.drawable.card_default),
             contentDescription = null,
             modifier = Modifier
                 .size(150.dp)

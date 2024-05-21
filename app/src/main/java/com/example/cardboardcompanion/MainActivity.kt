@@ -17,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.cardboardcompanion.domain.scheduled.manager.PriceUpdateWorkManager
 import com.example.cardboardcompanion.ui.component.TopNavBar
 import com.example.cardboardcompanion.ui.navigation.Collection
 import com.example.cardboardcompanion.ui.navigation.topBarNavScreens
@@ -28,6 +29,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        PriceUpdateWorkManager(this).schedulePriceUpdates()
+
         setContent {
             MainView()
         }

@@ -71,14 +71,25 @@ class LocalCollectionRepositoryTest {
     }
 
     @Test
-    fun localCollectionRepository_addCard_shouldUpdateCardQuantityInDatabase_whenCardExistsInDatabase() = runTest {
+    fun localCollectionRepository_updateCard_shouldUpdateCardInDatabase_whenCardExistsInDatabase() = runTest {
         val spyDao = spyk<CardDao>()
         val repositoryWithSpy = LocalCollectionRepository(spyDao)
         val newCard = testCollection[0]
 
         repositoryWithSpy.updateCardQuantity(newCard)
 
-        verify { spyDao.updateQuantity(any()) }
+        verify { spyDao.updateCard(any()) }
+    }
+
+    @Test
+    fun localCollectionRepository_updateCardQuantity_shouldUpdateCardQuantityInDatabase_whenCardExistsInDatabase() = runTest {
+        val spyDao = spyk<CardDao>()
+        val repositoryWithSpy = LocalCollectionRepository(spyDao)
+        val newCard = testCollection[0]
+
+        repositoryWithSpy.updateCardQuantity(newCard)
+
+        verify { spyDao.updateCard(any()) }
     }
 
     @Test

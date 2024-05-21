@@ -66,11 +66,11 @@ class ScannerViewModel @Inject constructor(
         }
     }
 
-    fun clearDetectedCardError(){
+    fun clearDetectedCardError() {
         cardValidationError = null
     }
 
-    fun clearDetectedCard(){
+    fun clearDetectedCard() {
         shouldShowConfirmDialog = false
         currentDetectedCard = null
     }
@@ -99,10 +99,10 @@ class ScannerViewModel @Inject constructor(
 
     private fun extractSet(): String? {
         val setTextBlock = detectedCardText.firstOrNull {
-            it.contains(Regex("^[A-Z]{3,5}(|.+EN)"))
+            it.contains(Regex("^[A-Z0-9]{3,5}(|.+EN)")) && !it.contains(Regex("^[0-9]{3}"))
         }
         if (setTextBlock != null) {
-            return (Regex("^[A-Z]{3,5}")).find(setTextBlock)?.value?.lowercase(Locale.ENGLISH)
+            return (Regex("^[A-Z0-9]{3,5}")).find(setTextBlock)?.value?.lowercase(Locale.ENGLISH)
         }
         return null
     }

@@ -58,7 +58,7 @@ interface CardDao {
     fun addCard(card: Card): Long?
 
     @Update
-    fun updateQuantity(card: Card): Int?
+    fun updateCard(card: Card): Int?
 
 }
 

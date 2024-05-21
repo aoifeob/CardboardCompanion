@@ -85,6 +85,8 @@ dependencies {
     implementation(libs.arrow.fx.coroutines)
     implementation(libs.androidx.camera.mlkit.vision)
     implementation(libs.coil.compose)
+    implementation(libs.androidx.work.runtime.ktx.v281)
+    implementation(libs.androidx.hilt.work.v100)
 
     kapt(libs.hilt.android.compiler)
     kapt(libs.androidx.hilt.compiler)

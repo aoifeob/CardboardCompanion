@@ -386,8 +386,8 @@ private fun CardPreview(card: Card) {
     Surface {
         AsyncImage(
             model = card.image,
-            placeholder = painterResource(R.drawable.card_default),
-            error = painterResource(id = R.drawable.loading_image),
+            placeholder = painterResource(id = R.drawable.loading_image),
+            error = painterResource(R.drawable.card_default),
             contentDescription = null,
             modifier = Modifier
                 .size(350.dp)
